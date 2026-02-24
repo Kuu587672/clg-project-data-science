@@ -12,7 +12,7 @@ def train_model():
     data.set_index('Date', inplace=True)
     
     # Select features
-    features = ["Return", "Return_lag1", "Return_lag2", "EMA_diff", "RSI", "Volatility", "Volume"]
+    features = ["Return", "Return_lag1", "Return_lag2", "EMA_ratio", "RSI", "Volatility", "Volume"]
     X = data[features]
     y = data["Target"]
     

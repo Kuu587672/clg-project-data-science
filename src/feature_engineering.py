@@ -15,7 +15,7 @@ def feature_engineering():
     # EMA (Exponential Moving Average)
     data["EMA_10"] = data["Close"].ewm(span=10).mean()
     data["EMA_20"] = data["Close"].ewm(span=20).mean()
-    data["EMA_diff"] = data["EMA_10"] - data["EMA_20"]
+    data["EMA_ratio"] = (data["EMA_10"] - data["EMA_20"]) / data["EMA_20"]
     
     # Volatility
     data["Volatility"] = data["High"] - data["Low"]
