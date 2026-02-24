@@ -12,7 +12,7 @@ def train_model():
     data.set_index('Date', inplace=True)
     
     # Select features
-    features = ["Return", "EMA_10", "EMA_20", "RSI", "Volatility", "Volume"]
+    features = ["Return", "Return_lag1", "Return_lag2", "EMA_diff", "RSI", "Volatility", "Volume"]
     X = data[features]
     y = data["Target"]
     
@@ -30,7 +30,11 @@ def train_model():
     X_test_scaled = scalar.transform(X_test)
     
     # Train logistic regression model
-    model = LogisticRegression()
+    model = LogisticRegression(
+        C=0.1,                    # Regularization strength (Reduces overfitting)
+        class_weight="balanced",    # Handle class imbalance
+        max_iter=1000
+    )
     model.fit(X_train_scaled, y_train)
     
     # Predictions
@@ -72,6 +76,10 @@ def train_model():
     plt.figure()
     importance.sort_values().plot(kind="barh")
     plt.title("Feature Importance (Logistic Regression)")
+    plt.show()
+    
+    # Correlation heatmap (temporary for analysis)
+    sns.heatmap(data.corr(), annot=False)
     plt.show()
     
     

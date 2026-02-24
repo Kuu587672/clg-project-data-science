@@ -9,10 +9,13 @@ def feature_engineering():
     
     # Daily return
     data["Return"] = data["Close"].pct_change()
+    data["Return_lag1"] = data["Return"].shift(1)
+    data["Return_lag2"] = data["Return"].shift(2)
     
     # EMA (Exponential Moving Average)
     data["EMA_10"] = data["Close"].ewm(span=10).mean()
     data["EMA_20"] = data["Close"].ewm(span=20).mean()
+    data["EMA_diff"] = data["EMA_10"] - data["EMA_20"]
     
     # Volatility
     data["Volatility"] = data["High"] - data["Low"]
@@ -29,6 +32,9 @@ def feature_engineering():
     
     # Dropping missing values caused by indicators
     data.dropna(inplace=True)
+    
+    # Drop redundant features
+    data.drop(columns=["EMA_10", "EMA_20"], inplace=True)
     
     # Save processed dataset
     data.to_csv("data/reliance_processed.csv")
