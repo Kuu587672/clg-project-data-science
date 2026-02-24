@@ -1,7 +1,10 @@
 import pandas as pd
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_curve, auc
+from sklearn.model_selection import TimeSeriesSplit, cross_val_score
+from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -15,6 +18,30 @@ def train_model():
     features = ["Return", "Return_lag1", "Return_lag2", "EMA_ratio", "RSI", "Volatility", "Volume"]
     X = data[features]
     y = data["Target"]
+    
+    # Time Series Cross Validation
+    pipeline = Pipeline([
+        ("scaler", StandardScaler()),
+        ("model", LogisticRegression(
+            C=0.1,
+            class_weight="balanced",
+            max_iter=1000
+        ))
+    ])
+
+    tscv = TimeSeriesSplit(n_splits=5)
+
+    cv_scores = cross_val_score(
+        pipeline,
+        X,
+        y,
+        cv=tscv,
+        scoring="roc_auc"
+    )
+
+    print("\nTimeSeries Cross-Validation AUC scores:", cv_scores)
+    print("Mean AUC:", np.mean(cv_scores))
+    print("Std Dev:", np.std(cv_scores))
     
     # Time-based split (80% train, 20% test)
     split = int(len(data) * 0.8)
