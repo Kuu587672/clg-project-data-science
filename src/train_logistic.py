@@ -58,7 +58,7 @@ def train_model():
     
     # Train logistic regression model
     model = LogisticRegression(
-        C=0.1,                    # Regularization strength (Reduces overfitting)
+        #C=0.1,                    # Regularization strength (Reduces overfitting)
         class_weight="balanced",    # Handle class imbalance
         max_iter=1000
     )
@@ -103,10 +103,6 @@ def train_model():
     plt.figure()
     importance.sort_values().plot(kind="barh")
     plt.title("Feature Importance (Logistic Regression)")
-    plt.show()
-    
-    # Correlation heatmap (temporary for analysis)
-    sns.heatmap(data.corr(), annot=False)
     plt.show()
     
     
